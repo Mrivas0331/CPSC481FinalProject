@@ -7,7 +7,41 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1 id="hello">Hello bum</h1>
-    <textarea id="hello" placeholder="Enter your notes here"></textarea>
+    <h1 id="title">Hello bum</h1>
+    
+    <textarea id="noteInput" placeholder="Enter your notes here"></textarea>
+    <br>
+    <button onclick="simplifyNotes()">Simplify Notes</button>
+
+    <div id="output">
+        </div>
+
+    <script>
+        async function simplifyNotes() {
+            const content = document.getElementById('noteInput').value;
+            const outputDiv = document.getElementById('output');
+            
+            if(!content) {
+                alert("Paste some notes first!");
+                return;
+            }
+
+            outputDiv.innerText = "Processing...";
+
+            try {
+                const response = await fetch('http://localhost:8000/simplify', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ content: content })
+                });
+                
+                const data = await response.json();
+                outputDiv.innerText = data.simplified_notes;
+            } catch (error) {
+                outputDiv.innerText = "Error: Couldn't connect to the backend. Is main.py running?";
+                console.error(error);
+            }
+        }
+    </script>
 </body>
 </html>

@@ -4,14 +4,26 @@
     box-sizing: border-box;
     background-color: bisque;
     text-align: center;
+    font-family: sans-serif;
 }
-#hello {
-    /* text-align: left; */
-}
+
 h1 {
     color: black;
     font-size: 2em;
-    margin-top: 20vh;
+    margin-top: 10vh;
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 80%;
+    max-width: 600px;
+    height: 150px;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background-color: white; /* Contrast for typing */
+    font-size: 1rem;
+    resize: vertical;
 }
 
 button {
@@ -20,7 +32,25 @@ button {
     font-size: 1.2em;
     cursor: pointer;
     background-color: white;
+    border: 1px solid #ccc;
     border-radius: 5px;
+    transition: 0.2s;
+}
+
+button:hover {
+    background-color: #f0f0f0;
+}
+
+#output {
+    width: 80%;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    text-align: left; /* Aligns bullet points nicely */
+    white-space: pre-wrap; /* Preserves the line breaks the AI sends back */
+    background-color: transparent;
+    font-size: 1.1rem;
+    line-height: 1.5;
 }
 
 #title {
