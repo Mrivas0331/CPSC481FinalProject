@@ -7,9 +7,76 @@
     <link rel="stylesheet" href="chat.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Hello bum</h1>
-        <textarea placeholder="Enter your notes here"></textarea>
+    <div id="chat-box">
+        <div id="start-screen">
+            <h1>Hello bum</h1>
+            <textarea id="notes" placeholder="Enter your notes here"></textarea>
+            <button id="submit">Submit</button>
+        </div>
+        
+        <div id="messages"></div>
+
+        <div id="input-container">
+            <input id="user-input" placeholder="Type your message here">
+            <button id="send">Send</button>
+        </div>
     </div>
 </body>
+
+<script>
+    const submitBtn = document.getElementById('submit');
+    const notes = document.getElementById('notes');
+    const messages = document.getElementById('messages');
+    const startScreen = document.getElementById('start-screen');
+    const inputContainer = document.getElementById('input-container');
+    const sendBtn = document.getElementById('send');
+
+    submitBtn.addEventListener('click', () => {
+        const notesText = notes.value.trim();
+
+        if (notesText === "") {
+            return;
+        }
+
+        startScreen.style.display = "none";
+        inputContainer.style.display = "flex";
+
+        const userMsg = document.createElement("div");
+        userMsg.classList.add("msg", "user");
+        userMsg.innerText = notesText;
+        messages.appendChild(userMsg);
+
+        const aiMsg = document.createElement("div");
+        aiMsg.classList.add("msg", "ai");
+        aiMsg.innerText = "This is an AI response.";
+        messages.appendChild(aiMsg);
+
+        messages.scrollTop = messages.scrollHeight;
+
+        notes.value = "";
+    });
+
+    sendBtn.addEventListener('click', () => {
+        const userInput = document.getElementById('user-input');
+        const userText = userInput.value.trim();
+
+        if (userText === "") {
+            return;
+        }
+
+        const userMsg = document.createElement("div");
+        userMsg.classList.add("msg", "user");
+        userMsg.innerText = userText;
+        messages.appendChild(userMsg);
+
+        const aiMsg = document.createElement("div");
+        aiMsg.classList.add("msg", "ai");
+
+        // Simulate an AI response
+        aiMsg.innerText = "This is an AI response.";
+        messages.appendChild(aiMsg);
+        userInput.value = "";
+        messages.scrollTop = messages.scrollHeight;
+    });
+</script>
 </html>
