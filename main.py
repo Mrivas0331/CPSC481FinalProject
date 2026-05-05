@@ -56,9 +56,16 @@ async def chat(data: ChatRequest):
         "Study Steve:"
     )
     
-    response = model.generate_content(prompt)
-    return {"response": response.text}
+    try:
+        response = model.generate_content(prompt)
+        return {"response": response.text}
+
+    except Exception as e:
+        print("Gemini API Error:", e)
+        return {
+            "response": "Study Steven is currently overloaded 😭 Please wait a moment and try again."
+        }
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8001)
