@@ -4,44 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="chat.css">
 </head>
 <body>
-    <h1 id="title">Hello bum</h1>
-    
-    <textarea id="noteInput" placeholder="Enter your notes here"></textarea>
-    <br>
-    <button onclick="simplifyNotes()">Simplify Notes</button>
-
-    <div id="output">
+    <div id="chat-box">
+        <div id="start-screen">
+            <h1>Hello! Let me see your notes.</h1>
+            <textarea id="notes" placeholder="Enter your notes here"></textarea>
+            <button id="submit">Simplify Notes</button>
         </div>
+        
+        <div id="messages"></div>
 
-    <script>
-        async function simplifyNotes() {
-            const content = document.getElementById('noteInput').value;
-            const outputDiv = document.getElementById('output');
-            
-            if(!content) {
-                alert("Paste some notes first!");
-                return;
-            }
-
-            outputDiv.innerText = "Processing...";
-
-            try {
-                const response = await fetch('http://localhost:8000/simplify', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ content: content })
-                });
-                
-                const data = await response.json();
-                outputDiv.innerText = data.simplified_notes;
-            } catch (error) {
-                outputDiv.innerText = "Error: Couldn't connect to the backend. Is main.py running?";
-                console.error(error);
-            }
-        }
-    </script>
+        <div id="input-container">
+            <input id="user-input" placeholder="Type your message here">
+            <button id="send">Send</button>
+        </div>
+    </div>
 </body>
+
+<script>
+    const submitBtn = document.getElementById('submit');
+    const notes = document.getElementById('notes');
+    const messages = document.getElementById('messages');
+    const startScreen = document.getElementById('start-screen');
+    const inputContainer = document.getElementById('input-container');
+    const sendBtn = document.getElementById('send');
+
+    submitBtn.addEventListener('click', async () => {
+        const notesText = notes.value.trim();
+
+        if (!notesText) {
+            alert("Please enter some notes!");
+            return;
+        }
+
+        startScreen.style.display = "none";
+        inputContainer.style.display = "flex";
+
+        const userMsg = document.createElement("div");
+        userMsg.classList.add("msg", "user");
+        userMsg.innerText = notesText;
+        messages.appendChild(userMsg);
+
+        const aiMsg = document.createElement("div");
+        aiMsg.classList.add("msg", "ai");
+        aiMsg.innerText = "Thinking ...";
+        messages.appendChild(aiMsg);
+
+        try {
+            const response = await fetch("http://localhost:8000/simplify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content : notesText })
+            });
+
+            const data = await response.json();
+            aiMsg.innerText = data.simplified_notes || data.response || "No response from the server.";
+        } catch (error) {
+            aiMsg.innerText = "Error: couldn't connect to the backend. Is main.py running?";
+            console.error("Error:", error);
+        }
+
+        messages.scrollTop = messages.scrollHeight;
+
+        notes.value = "";
+    });
+
+    sendBtn.addEventListener('click', async () => {
+        const userInput = document.getElementById('user-input');
+        const userText = userInput.value.trim();
+
+        if (!userText) {
+            alert("Please enter a message!");
+            return;
+        }
+
+        const userMsg = document.createElement("div");
+        userMsg.classList.add("msg", "user");
+        userMsg.innerText = userText;
+        messages.appendChild(userMsg);
+
+        const aiMsg = document.createElement("div");
+        aiMsg.classList.add("msg", "ai");
+        aiMsg.innerText = "Thinking ...";
+        messages.appendChild(aiMsg);
+
+        try {
+            const response = await fetch("http://localhost:8000/simplify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content : userText })
+            });
+
+            const data = await response.json();
+            aiMsg.innerText = data.simplified_notes || data.response || "No response from the server.";
+        } catch (error) {
+            aiMsg.innerText = "Error: couldn't connect to the backend. Is main.py running?";
+            console.error("Error:", error);
+        }
+        userInput.value = "";
+        messages.scrollTop = messages.scrollHeight;
+    });
+</script>
 </html>

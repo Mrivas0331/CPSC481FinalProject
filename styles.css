@@ -1,63 +1,58 @@
 * {
     margin: 0;
-    padding: 0;
     box-sizing: border-box;
-    background-color: bisque;
+    font-family: 'Courier New', Courier, monospace;
     text-align: center;
-    font-family: sans-serif;
+}
+
+body {
+    background-color: #d8c7ff;
+}
+
+/* top and bottom split */
+.top-half, .bottom-half {
+    height: 50vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.8s ease-in-out;
+}
+
+/* title + button */
+.content {
+    text-align: center;
+}
+
+#hello { 
+    text-align: center;
 }
 
 h1 {
     color: black;
     font-size: 2em;
-    margin-top: 10vh;
-    margin-bottom: 20px;
-}
-
-textarea {
-    width: 80%;
-    max-width: 600px;
-    height: 150px;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    background-color: white; /* Contrast for typing */
-    font-size: 1rem;
-    resize: vertical;
+    margin: 0;
 }
 
 button {
-    margin-top: 20px;
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 1.2em;
     cursor: pointer;
     background-color: white;
-    border: 1px solid #ccc;
     border-radius: 5px;
-    transition: 0.2s;
+    transition: all 0.3s ease;
 }
 
 button:hover {
-    background-color: #f0f0f0;
+    transform: scale(1.05);
+    background-color: lightgray;
 }
 
-#output {
-    width: 80%;
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 20px;
-    text-align: left; /* Aligns bullet points nicely */
-    white-space: pre-wrap; /* Preserves the line breaks the AI sends back */
-    background-color: transparent;
-    font-size: 1.1rem;
-    line-height: 1.5;
+/* animation */
+.top-slide-out {
+    transform: translateY(-100%);
 }
 
-#title {
-    opacity: 1;
-    transition: opacity 1s ease-out;
-}
-
-.fade-out {
-    opacity: 0;
+.bottom-slide-out {
+    transform: translateY(100%);
 }
