@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
     <link rel="stylesheet" href="chat.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div id="chat-box">
@@ -30,6 +31,7 @@
     const startScreen = document.getElementById('start-screen');
     const inputContainer = document.getElementById('input-container');
     const sendBtn = document.getElementById('send');
+    let chatHistory = [];
 
     submitBtn.addEventListener('click', async () => {
         const notesText = notes.value.trim();
@@ -49,18 +51,28 @@
 
         const aiMsg = document.createElement("div");
         aiMsg.classList.add("msg", "ai");
-        aiMsg.innerText = "Thinking ...";
+        aiMsg.innerText = "Study Steve is thinking ...";
         messages.appendChild(aiMsg);
+        notes.value = "";
 
         try {
-            const response = await fetch("http://localhost:8000/simplify", {
+            chatHistory.push({
+                role: "user",
+                content: notesText
+            });
+            const response = await fetch("http://localhost:8000/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content : notesText })
+                body: JSON.stringify({ messages: chatHistory })
             });
 
             const data = await response.json();
-            aiMsg.innerText = data.simplified_notes || data.response || "No response from the server.";
+            aiMsg.innerHTML = marked.parse(data.response || "No response from the server.");
+
+            chatHistory.push({
+                role: "ai",
+                content: aiMsg.innerHTML
+            });
         } catch (error) {
             aiMsg.innerText = "Error: couldn't connect to the backend. Is main.py running?";
             console.error("Error:", error);
@@ -68,7 +80,12 @@
 
         messages.scrollTop = messages.scrollHeight;
 
-        notes.value = "";
+    });
+
+    inputContainer.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendBtn.click();
+        }
     });
 
     sendBtn.addEventListener('click', async () => {
@@ -87,23 +104,33 @@
 
         const aiMsg = document.createElement("div");
         aiMsg.classList.add("msg", "ai");
-        aiMsg.innerText = "Thinking ...";
+        aiMsg.innerText = "Study Steve is thinking ...";
         messages.appendChild(aiMsg);
+        userInput.value = "";
 
         try {
-            const response = await fetch("http://localhost:8000/simplify", {
+            chatHistory.push({
+                role: "user",
+                content: userText
+            });
+
+            const response = await fetch("http://localhost:8000/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content : userText })
+                body: JSON.stringify({ messages: chatHistory })
             });
 
             const data = await response.json();
-            aiMsg.innerText = data.simplified_notes || data.response || "No response from the server.";
+            aiMsg.innerHTML = marked.parse(data.response || "No response from the server.");
+
+            chatHistory.push({
+                role: "ai",
+                content: aiMsg.innerHTML
+            });
         } catch (error) {
             aiMsg.innerText = "Error: couldn't connect to the backend. Is main.py running?";
             console.error("Error:", error);
         }
-        userInput.value = "";
         messages.scrollTop = messages.scrollHeight;
     });
 </script>

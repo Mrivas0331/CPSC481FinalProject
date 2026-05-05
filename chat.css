@@ -78,16 +78,29 @@ textarea {
     white-space: pre-wrap;
     line-height: 1.4;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 .user {
     background-color: rgb(242, 182, 182);
     align-self: flex-end;
     text-align: right;
+    border-bottom-right-radius: 4px;
 }
 
 .ai {
     background-color: #9abee2;
     align-self: flex-start;
     text-align: left;
+    border-bottom-left-radius: 4px;
+}
+
+.ai ul, .ai ol {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.ai li {
+    text-align: left;
+    margin-bottom: 6px;
 }
